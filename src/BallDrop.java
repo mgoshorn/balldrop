@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
@@ -22,13 +20,18 @@ public class BallDrop extends JPanel {
      * the window size.
      * LIGHT_OFFSET - Sets a number to be subtracted after the multiplier which allows the light to travel to a
      * value less than the center of the ball
-     * BALL_DIAMETER - Sets balls diameter
+     * BALL_DIAMETER - Sets ball diameter
      * INITIAL_X_POSITION - Sets starting x coordinate for the ball
      * INITIAL_Y_POSITION - Sets starting y coordinate for the ball
      * TIME_STEP - Timing of updating/repainting in milliseconds.
      */
-    private static final Color BASE_COLOR = Color.RED;
-    private static final Color SHADOWED_COLOR = new Color(50, 0, 0, 255);
+    private static final Color BASE_COLOR = Color.BLUE;
+    private static final Color SHADOWED_COLOR = new Color(
+            (int)(BASE_COLOR.getRed() * 0.2),
+            (int)(BASE_COLOR.getGreen() * 0.2),
+            (int)(BASE_COLOR.getBlue() * 0.2),
+            BASE_COLOR.getAlpha());
+    //private static final Color SHADOWED_COLOR = new Color(50, 0, 0, 255);
     private static final boolean IS_AFFECTED_BY_GRAVITY = true;
     private static final double SURFACE_FRICTION = 0.99;
     private static final double ELASTICITY = 0.5;
@@ -38,6 +41,8 @@ public class BallDrop extends JPanel {
     private static final double INITIAL_X_POSITION = 100;
     private static final double INITIAL_Y_POSITION = 100;
     private static final int TIME_STEP = 1000/60;
+    private static final double INITIAL_X_VELOCITY = 12;
+    private static final double INITIAL_Y_VELOCITY = 12;
 
 
     /**
@@ -130,18 +135,11 @@ public class BallDrop extends JPanel {
 
         //Initializes ball to initial positions
         ball = new Ellipse2D.Double(INITIAL_X_POSITION, INITIAL_Y_POSITION, BALL_DIAMETER, BALL_DIAMETER);
-
-        //Sets up loop for updating/repainting
-        ActionListener looper = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                display.update();
-                display.repaint();
-            }
-        };
-
-        //Initializes, starts Timer
-        Timer timer = new Timer(TIME_STEP, looper);
+        //Initializes, starts update/repaint Timer
+        Timer timer = new Timer(TIME_STEP, e -> {
+            display.update();
+            display.repaint();
+        });
         timer.start();
     }
 }
